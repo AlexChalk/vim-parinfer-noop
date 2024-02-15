@@ -1,48 +1,25 @@
-## vim-parinfer
+## vim-parinfer-noop
 
-This is a vim plugin for using [parinfer](https://shaunlebron.github.io/parinfer/) to indent your clojure and lisp code.
+It's https://github.com/bhurlow/vim-parinfer, but (by default) it does nothing.
 
-It uses [Chris Oakman's awesome viml implementation](https://github.com/oakmac/parinfer-viml) under the hood
+## Why?
 
-<h5 style="color: blue;"> pull requests // issues welcome </h5>
+If you only want to modify your buffer using parinfer in precise scenarios that you explicitly define.
 
-## Installation 
+For example, I mostly prefer https://github.com/guns/vim-sexp, https://github.com/tpope/vim-sexp-mappings-for-regular-people, and https://github.com/kovisoft/paredit for sexp-editing, but none of these libraries will autobalance my parentheses for me if I comment out code.
 
-### using pathogen: 
-
-```
-cd ~/.vim/bundle
-git clone git://github.com/bhurlow/vim-parinfer.git
-```
-### using Vundle:
-
-add 
+By importing this library without defining any mappings or autocmds, and by leveraging https://github.com/numToStr/Comment.nvim and its `post_hook` method, I can get the behaviour I want:
 
 ```
-Plugin 'bhurlow/vim-parinfer'
+require("Comment").setup({
+  post_hook = function()
+    local filetypes = { clojure = true, clojurescript = true }
+    local current_filetype = vim.bo.filetype
+    if filetypes[current_filetype] then
+      vim.call("parinfer#process_form")
+    end
+  end,
+})
 ```
 
-to your `.vimrc`
-
-run
- 
-```
-:PluginInstall
-```
-
-
-## Mappings 
-
-Parinfer is trigger on all TextChanged events within vim.
-In addition, you may use the following mapped commands:
-
-- `<Tab>` - indents s-expression
-- `<Tab-S>` - dedents s-expression
-- `dd` - deletes line and balances parenthesis
-- `p` - puts line and balances parenthesis
-
-
-
-
-
-
+tl;dr: if you want a parinfer implementation for (neo)vim, but you also want more precise control over when it modifies your buffer, then this package might be useful to you.
