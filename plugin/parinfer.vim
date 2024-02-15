@@ -170,24 +170,3 @@ function! parinfer#ToggleParinferMode()
 endfunction
 
 com! -bar ToggleParinferMode cal parinfer#ToggleParinferMode() 
-
-augroup parinfer
-  autocmd!
-  execute "autocmd FileType " . join(g:vim_parinfer_filetypes, ",") . " autocmd InsertLeave <buffer> call parinfer#process_form()"
-  execute "autocmd FileType " . join(g:vim_parinfer_filetypes, ",") . " nnoremap <buffer> <Tab> :call parinfer#do_indent()<cr>"
-  execute "autocmd FileType " . join(g:vim_parinfer_filetypes, ",") . " nnoremap <buffer> <S-Tab> :call parinfer#do_undent()<cr>"
-  execute "autocmd FileType " . join(g:vim_parinfer_filetypes, ",") . " vnoremap <buffer> <Tab> :call parinfer#do_indent()<cr>"
-  execute "autocmd FileType " . join(g:vim_parinfer_filetypes, ",") . " vnoremap <buffer> <S-Tab> :call parinfer#do_undent()<cr>"
-
-  if exists('##TextChangedI')
-    execute "autocmd FileType " . join(g:vim_parinfer_filetypes, ",") . " autocmd TextChangedI <buffer> call parinfer#process_form_insert()"
-  endif
-
-  if exists('##TextChanged')
-    execute "autocmd FileType " . join(g:vim_parinfer_filetypes, ",") . " autocmd TextChanged <buffer> call parinfer#process_form()"
-  else
-    " dd and p trigger paren rebalance
-    execute "autocmd FileType " . join(g:vim_parinfer_filetypes, ",") . " nnoremap <buffer> dd :call parinfer#delete_line()<cr>"
-    execute "autocmd FileType " . join(g:vim_parinfer_filetypes, ",") . " nnoremap <buffer> p  :call parinfer#put_line()<cr>"
-  endif
-augroup END
